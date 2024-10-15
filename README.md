@@ -10,16 +10,18 @@ Flutter Technical Test
 
 ## How to run the project
 
-Clone the repository to your local machine
+1. Clone the repository to your local machine
 
-Install packages with:
+2. Add `.env` file with variables
 
-```
-flutter pub get
-```
+3. Install packages with:
 
-Run application with:
+   ```
+   flutter pub get
+   ```
 
-```
-flutter run
-```
+4. Run application with:
+
+   ```
+   flutter run
+   ```
