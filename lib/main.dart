@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:transactions_app/core/core.dart';
 
+import 'package:transactions_app/features/transactions/presentation/presentation.dart';
+
 import 'package:transactions_app/features/shared/shared.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -50,54 +52,16 @@ class _TransactionsAppState extends ConsumerState<TransactionsApp> {
             return const SplashPage();
           }
 
-          return const MyHomePage(title: 'Transactions');
+          if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                child: Text(snapshot.error.toString()),
+              ),
+            );
+          }
+
+          return const HomePage();
         },
-      ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() => _counter++);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

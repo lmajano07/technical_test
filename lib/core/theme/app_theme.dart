@@ -26,6 +26,12 @@ class AppTheme {
         brightness: isDarkmode ? Brightness.dark : Brightness.light,
         colorSchemeSeed: colorList[selectedColor],
         appBarTheme: const AppBarTheme(centerTitle: false),
+        iconButtonTheme: const IconButtonThemeData(
+          style: ButtonStyle(
+            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+            padding: WidgetStatePropertyAll(EdgeInsets.zero),
+          ),
+        ),
       );
 
   AppTheme copyWith({int? selectedColor, bool? isDarkmode}) => AppTheme(
