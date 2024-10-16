@@ -2,7 +2,13 @@ import 'package:transactions_app/core/core.dart';
 
 import 'package:transactions_app/features/transactions/domain/domain.dart';
 
+import 'package:sqflite/sqflite.dart' as sqlite;
+
 class TransactionsDatasourceImpl implements TransactionsDatasource {
+  final Future<sqlite.Database> database;
+
+  TransactionsDatasourceImpl({required this.database});
+
   @override
   Future<ApiResponse> create(Transaction transaction) {
     // TODO: implement create
