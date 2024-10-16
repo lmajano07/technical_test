@@ -4,5 +4,5 @@ import 'package:transactions_app/features/transactions/infrastructure/infrastruc
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final transactionsRepoProvider = Provider<TransactionsRepository>((ref) {
-  return TransactionsRepositoryImpl();
+  return TransactionsRepositoryImpl(datasource: TransactionsDatasourceImpl());
 });

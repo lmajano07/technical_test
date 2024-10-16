@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:transactions_app/core/core.dart';
 
-import 'package:transactions_app/shared/shared.dart';
+import 'package:transactions_app/features/shared/shared.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
