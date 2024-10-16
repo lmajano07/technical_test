@@ -39,6 +39,7 @@ class _TransactionsAppState extends ConsumerState<TransactionsApp> {
     final appTheme = ref.watch(themeNotifierProvider);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Transactions App',
       theme: appTheme.getTheme(),
       home: FutureBuilder(
