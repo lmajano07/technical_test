@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 const List<Color> colorList = [
+  Color(0xFF1F3700),
   Colors.blueGrey,
   Colors.teal,
-  Colors.green,
   Colors.red,
   Colors.purple,
   Colors.deepPurple,
@@ -26,6 +26,12 @@ class AppTheme {
         brightness: isDarkmode ? Brightness.dark : Brightness.light,
         colorSchemeSeed: colorList[selectedColor],
         appBarTheme: const AppBarTheme(centerTitle: false),
+        iconButtonTheme: const IconButtonThemeData(
+          style: ButtonStyle(
+            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+            padding: WidgetStatePropertyAll(EdgeInsets.zero),
+          ),
+        ),
       );
 
   AppTheme copyWith({int? selectedColor, bool? isDarkmode}) => AppTheme(
