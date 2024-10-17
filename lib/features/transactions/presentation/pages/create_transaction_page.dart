@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:transactions_app/core/core.dart';
+
 import 'package:transactions_app/features/shared/shared.dart';
 import 'package:transactions_app/features/transactions/domain/domain.dart';
 import 'package:transactions_app/features/transactions/presentation/presentation.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateTransactionPage extends ConsumerStatefulWidget {
   const CreateTransactionPage({super.key});
@@ -42,8 +45,8 @@ class _CreateTransactionPageState extends ConsumerState<CreateTransactionPage> {
     } else {
       showCustomDialog(
         context,
-        title: 'Error!',
-        content: 'Couldn\'t create this transaction. Please try again later',
+        title: 'Success!',
+        content: 'Transacion created succesfully',
         onOkPressed: () {
           Navigator.pop(context);
           Navigator.pop(context);

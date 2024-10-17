@@ -19,9 +19,14 @@ Future<T?> showCustomDialog<T>(
         contentTextStyle: Theme.of(context).textTheme.bodyMedium!,
         actions: [
           TextButton(
-            onPressed: () => onOkPressed != null
-                ? onOkPressed()
-                : () => Navigator.pop(context),
+            onPressed: () {
+              if (onOkPressed == null) {
+                Navigator.pop(context);
+                return;
+              }
+
+              onOkPressed();
+            },
             child: const Text('Ok'),
           ),
         ],
