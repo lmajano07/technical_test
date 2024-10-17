@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:transactions_app/core/core.dart';
 
 import 'package:transactions_app/features/transactions/domain/domain.dart';
@@ -40,9 +41,24 @@ class TransactionsDatasourceImpl implements TransactionsDatasource {
   }
 
   @override
-  FutureEitherTransactions getAll() {
-    // TODO: implement getAll
-    throw UnimplementedError();
+  FutureEitherTransactions getAll() async {
+    try {
+      final List<Transaction> transactions = [];
+      final db = await database;
+
+      final List<Map<String, Object?>> transactionObjetcs = await db.query(
+        Environment.transactionsName,
+      );
+
+      for (var item in transactionObjetcs) {
+        transactions.add(TransactionMapper.mapToEntity(item));
+      }
+
+      return right(transactions);
+    } catch (e) {
+      print(e.toString());
+      return left(ErrorResponse(message: e.toString()));
+    }
   }
 
   @override

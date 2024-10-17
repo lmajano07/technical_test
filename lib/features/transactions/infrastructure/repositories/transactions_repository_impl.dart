@@ -25,8 +25,7 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
 
   @override
   FutureEitherTransactions getAll() {
-    // TODO: implement getAll
-    throw UnimplementedError();
+    return datasource.getAll();
   }
 
   @override

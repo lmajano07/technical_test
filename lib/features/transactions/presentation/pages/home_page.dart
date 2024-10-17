@@ -22,31 +22,18 @@ class _HomePageState extends ConsumerState<HomePage> {
   List<Transaction> transactions = [];
 
   Future _getTransactions() async {
-    setState(() {
-      transactions = [
-        Transaction(
-          id: 0,
-          amount: 5.0,
-          description: 'description',
-          type: TransactionType.expense,
-          createdAt: DateTime.now(),
-        ),
-        Transaction(
-          id: 0,
-          amount: 5.0,
-          description: 'description',
-          type: TransactionType.income,
-          createdAt: DateTime.now(),
-        ),
-        Transaction(
-          id: 0,
-          amount: 5.0,
-          description: 'description',
-          type: TransactionType.expense,
-          createdAt: DateTime.now(),
-        ),
-      ];
-    });
+    final result = await ref.read(transactionsProvider.notifier).getAll();
+
+    if (result.type == ResponseType.error) {
+      showCustomDialog(
+        context,
+        title: 'Error',
+        content: 'Couldn\'t fetch your records. Please try again later',
+      );
+      return;
+    }
+
+    setState(() => transactions = ref.read(transactionsProvider).transactions);
   }
 
   @override
@@ -110,20 +97,26 @@ class _HomePageState extends ConsumerState<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
             children: [
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(top: 32),
-                  shrinkWrap: true,
-                  itemCount: transactions.length,
-                  itemBuilder: (context, index) {
-                    return TransactionCard(
-                      margin: const EdgeInsets.only(bottom: 22),
-                      transaction: transactions[index],
-                      onTap: (trs) {},
-                    );
-                  },
-                ),
-              ),
+              (ref.watch(transactionsProvider).isLoading)
+                  ? const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(top: 32),
+                        shrinkWrap: true,
+                        itemCount: transactions.length,
+                        itemBuilder: (context, index) {
+                          return TransactionCard(
+                            margin: const EdgeInsets.only(bottom: 22),
+                            transaction: transactions[index],
+                            onTap: (trs) {},
+                          );
+                        },
+                      ),
+                    ),
             ],
           ),
         ),

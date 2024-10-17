@@ -105,6 +105,13 @@ class _CreateTransactionPageState extends ConsumerState<CreateTransactionPage> {
                 onDateChanged: (date) {
                   setState(() => selectedDate = date);
                 },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Date is required';
+                  }
+
+                  return null;
+                },
               ),
               const SizedBox(height: 24),
               TransactionTypeSwitch(

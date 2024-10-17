@@ -6,12 +6,16 @@ class TransactionMapper {
   TransactionMapper._();
 
   static Transaction mapToEntity(Map<String, dynamic> map) {
+    double amount = 0.0;
+    final isInt = map['amount'].runtimeType == int;
+    amount = (isInt) ? map['amount'].toDouble() : amount = map['amount'];
+
     return Transaction(
-      id: int.parse(map['id']),
-      amount: map['amount'],
+      id: map['id'],
+      amount: amount,
       description: map['description'],
       type: transactionTypeFromString(map['type']),
-      createdAt: DateTime.parse(map['createdAt']),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
     );
   }
 

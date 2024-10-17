@@ -32,6 +32,24 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
 
     return result;
   }
+
+  Future<ApiResponse> getAll() async {
+    state = state.copyWith(isLoading: true);
+
+    final result = await repository.getAll();
+
+    return result.fold(
+      (error) {
+        state = state.copyWith(isLoading: false);
+        return error;
+      },
+      (transactions) {
+        state = state.copyWith(transactions: transactions, isLoading: false);
+
+        return SuccessResponse();
+      },
+    );
+  }
 }
 
 class TransactionsState {
