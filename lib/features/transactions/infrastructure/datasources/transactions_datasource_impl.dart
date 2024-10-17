@@ -3,6 +3,7 @@ import 'package:transactions_app/core/core.dart';
 import 'package:transactions_app/features/transactions/domain/domain.dart';
 
 import 'package:sqflite/sqflite.dart' as sqlite;
+import 'package:transactions_app/features/transactions/infrastructure/infrastructure.dart';
 
 class TransactionsDatasourceImpl implements TransactionsDatasource {
   final Future<sqlite.Database> database;
@@ -10,9 +11,20 @@ class TransactionsDatasourceImpl implements TransactionsDatasource {
   TransactionsDatasourceImpl({required this.database});
 
   @override
-  Future<ApiResponse> create(Transaction transaction) {
-    // TODO: implement create
-    throw UnimplementedError();
+  Future<ApiResponse> create(Transaction transaction) async {
+    try {
+      final db = await database;
+
+      await db.insert(
+        Environment.transactionsName,
+        TransactionMapper.entityToMap(transaction),
+        conflictAlgorithm: sqlite.ConflictAlgorithm.replace,
+      );
+
+      return SuccessResponse();
+    } catch (e) {
+      return ErrorResponse(message: e.toString());
+    }
   }
 
   @override

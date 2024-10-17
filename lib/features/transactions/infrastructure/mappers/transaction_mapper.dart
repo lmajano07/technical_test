@@ -7,6 +7,7 @@ class TransactionMapper {
 
   static Transaction mapToEntity(Map<String, dynamic> map) {
     return Transaction(
+      id: int.parse(map['id']),
       amount: map['amount'],
       description: map['description'],
       type: transactionTypeFromString(map['type']),
@@ -16,10 +17,11 @@ class TransactionMapper {
 
   static Map<String, dynamic> entityToMap(Transaction transaction) {
     return {
+      'id': transaction.id,
       'amount': transaction.amount,
       'description': transaction.description,
       'type': transaction.type.toString(),
-      'createdAt': transaction.createdAt,
+      'createdAt': transaction.createdAt.millisecondsSinceEpoch,
     };
   }
 }

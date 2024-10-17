@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:transactions_app/core/core.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:transactions_app/features/shared/shared.dart';
 import 'package:transactions_app/features/transactions/domain/domain.dart';
 import 'package:transactions_app/features/transactions/presentation/presentation.dart';
+
+import 'package:transactions_app/features/shared/shared.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final filterProvider = StateProvider<TransactionType?>((ref) => null);
 
@@ -23,18 +25,21 @@ class _HomePageState extends ConsumerState<HomePage> {
     setState(() {
       transactions = [
         Transaction(
+          id: 0,
           amount: 5.0,
           description: 'description',
           type: TransactionType.expense,
           createdAt: DateTime.now(),
         ),
         Transaction(
+          id: 0,
           amount: 5.0,
           description: 'description',
           type: TransactionType.income,
           createdAt: DateTime.now(),
         ),
         Transaction(
+          id: 0,
           amount: 5.0,
           description: 'description',
           type: TransactionType.expense,
@@ -122,24 +127,22 @@ class _HomePageState extends ConsumerState<HomePage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'My transactions',
-          style: Theme.of(context).textTheme.titleLarge,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateTransactionPage(),
+              ),
+            ).then((val) async => await _getTransactions());
+          },
         ),
-      ],
+      ),
     );
   }
 }
