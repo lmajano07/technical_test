@@ -19,8 +19,7 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
 
   @override
   Future<ApiResponse> deleteAll() {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
+    return datasource.deleteAll();
   }
 
   @override
@@ -30,7 +29,6 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
 
   @override
   Future<ApiResponse> update(Transaction transaction) {
-    // TODO: implement update
-    throw UnimplementedError();
+    return datasource.update(transaction);
   }
 }

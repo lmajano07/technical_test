@@ -56,7 +56,6 @@ class TransactionsDatasourceImpl implements TransactionsDatasource {
 
       return right(transactions);
     } catch (e) {
-      print(e.toString());
       return left(ErrorResponse(message: e.toString()));
     }
   }
