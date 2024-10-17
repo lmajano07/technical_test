@@ -30,6 +30,12 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         RadioListTile.adaptive(
+          value: null,
+          groupValue: currentValue,
+          onChanged: onOptionSelected,
+          title: const Text('None'),
+        ),
+        RadioListTile.adaptive(
           value: TransactionType.expense,
           groupValue: currentValue,
           onChanged: onOptionSelected,
@@ -40,12 +46,6 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
           groupValue: currentValue,
           onChanged: onOptionSelected,
           title: const Text('Income'),
-        ),
-        RadioListTile.adaptive(
-          value: null,
-          groupValue: currentValue,
-          onChanged: onOptionSelected,
-          title: const Text('None'),
         ),
       ],
     );

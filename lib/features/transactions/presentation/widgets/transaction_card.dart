@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:transactions_app/features/shared/helpers/datetime_extension.dart';
-import 'package:transactions_app/features/shared/shared.dart';
+
 import 'package:transactions_app/features/transactions/domain/domain.dart';
+
+import 'package:transactions_app/features/shared/shared.dart';
+
+import 'package:intl/intl.dart';
 
 class TransactionCard extends StatelessWidget {
   const TransactionCard({
@@ -27,7 +29,7 @@ class TransactionCard extends StatelessWidget {
         margin: margin,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: colorScheme.surface,
+          color: colorScheme.surfaceBright,
           boxShadow: [
             BoxShadow(
               color: colorScheme.onSurface.withOpacity(0.1),

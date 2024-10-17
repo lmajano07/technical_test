@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const List<Color> colorList = [
-  Color(0xFF63A002),
+  Color(0xFF1F3700),
   Colors.blueGrey,
   Colors.teal,
   Colors.red,

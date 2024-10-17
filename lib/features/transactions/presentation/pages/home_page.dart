@@ -44,6 +44,15 @@ class _HomePageState extends ConsumerState<HomePage> {
     });
   }
 
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _getTransactions();
+    });
+
+    super.initState();
+  }
+
   List<Transaction> filteredTransactions() {
     final filter = ref.watch(filterProvider);
 
