@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:transactions_app/features/transactions/domain/domain.dart';
+import 'package:transactions_app/features/transactions/presentation/presentation.dart';
 
 import 'package:transactions_app/features/shared/shared.dart';
-
-import 'package:intl/intl.dart';
 
 class TransactionCard extends StatelessWidget {
   const TransactionCard({
@@ -41,58 +40,36 @@ class TransactionCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  transaction.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Text(
-                  transaction.createdAt.format(),
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: colorScheme.onSurface,
-                        fontStyle: FontStyle.italic,
-                      ),
-                ),
-              ],
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    transaction.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Text(
+                    transaction.createdAt.format(),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: colorScheme.onSurface,
+                          fontStyle: FontStyle.italic,
+                        ),
+                  ),
+                ],
+              ),
             ),
-            const Spacer(),
-            _AmountChip(isExpense: isExpense, transaction: transaction),
+            Flexible(
+              flex: 1,
+              child: AmountChip(
+                isExpense: isExpense,
+                amount: transaction.amount,
+              ),
+            ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _AmountChip extends StatelessWidget {
-  const _AmountChip({
-    required this.isExpense,
-    required this.transaction,
-  });
-
-  final bool isExpense;
-  final Transaction transaction;
-
-  @override
-  Widget build(BuildContext context) {
-    final numberFormat = NumberFormat('#,##0.00');
-
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: isExpense ? Colors.red : Colors.green,
-      ),
-      child: Text(
-        '${isExpense ? '-' : '+'} \$${numberFormat.format(transaction.amount)}',
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
       ),
     );
   }

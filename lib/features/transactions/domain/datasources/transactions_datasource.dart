@@ -7,5 +7,4 @@ abstract class TransactionsDatasource {
   Future<ApiResponse> create(Transaction transaction);
   Future<ApiResponse> update(Transaction transaction);
   Future<ApiResponse> delete(int id);
-  Future<ApiResponse> deleteAll();
 }

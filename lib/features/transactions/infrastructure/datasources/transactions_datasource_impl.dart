@@ -46,12 +46,6 @@ class TransactionsDatasourceImpl implements TransactionsDatasource {
   }
 
   @override
-  Future<ApiResponse> deleteAll() {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
-  }
-
-  @override
   FutureEitherTransactions getAll() async {
     try {
       final List<Transaction> transactions = [];

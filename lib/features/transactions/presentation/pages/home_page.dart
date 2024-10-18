@@ -106,6 +106,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
             children: [
+              const SizedBox(height: verticalPadding),
+              const BalanceWidget(),
               Expanded(
                 child: (ref.watch(transactionsProvider).isLoading)
                     ? const _Loader()
