@@ -18,7 +18,7 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
   TransactionsNotifier({required this.repository}) : super(TransactionsState());
 
   Future<ApiResponse> create(Transaction transaction) async {
-    state = state.copyWith(isLoading: true);
+    _toggleLoading();
 
     if (state.transactions.isEmpty) {
       transaction = transaction.copyWith(id: 1);
@@ -28,19 +28,19 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
 
     final result = await repository.create(transaction);
 
-    state = state.copyWith(isLoading: false);
+    _toggleLoading();
 
     return result;
   }
 
   Future<ApiResponse> getAll() async {
-    state = state.copyWith(isLoading: true);
+    _toggleLoading();
 
     final result = await repository.getAll();
 
     return result.fold(
       (error) {
-        state = state.copyWith(isLoading: false);
+        _toggleLoading();
         return error;
       },
       (transactions) {
@@ -52,8 +52,16 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
   }
 
   Future<ApiResponse> delete(int id) async {
-    return await repository.delete(id);
+    _toggleLoading();
+
+    final result = await repository.delete(id);
+
+    _toggleLoading();
+
+    return result;
   }
+
+  void _toggleLoading() => state = state.copyWith(isLoading: !state.isLoading);
 }
 
 class TransactionsState {
