@@ -19,19 +19,16 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
 
   @override
   Future<ApiResponse> deleteAll() {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
+    return datasource.deleteAll();
   }
 
   @override
   FutureEitherTransactions getAll() {
-    // TODO: implement getAll
-    throw UnimplementedError();
+    return datasource.getAll();
   }
 
   @override
   Future<ApiResponse> update(Transaction transaction) {
-    // TODO: implement update
-    throw UnimplementedError();
+    return datasource.update(transaction);
   }
 }

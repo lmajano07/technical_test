@@ -9,3 +9,5 @@ const EdgeInsetsGeometry screenPadding = EdgeInsets.fromLTRB(
   horizontalPadding,
   0,
 );
+
+const double bottomSpacing = 0.05;

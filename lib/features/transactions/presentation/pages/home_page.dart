@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:transactions_app/core/core.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:transactions_app/features/shared/shared.dart';
 import 'package:transactions_app/features/transactions/domain/domain.dart';
 import 'package:transactions_app/features/transactions/presentation/presentation.dart';
+
+import 'package:transactions_app/features/shared/shared.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final filterProvider = StateProvider<TransactionType?>((ref) => null);
 
@@ -20,28 +22,18 @@ class _HomePageState extends ConsumerState<HomePage> {
   List<Transaction> transactions = [];
 
   Future _getTransactions() async {
-    setState(() {
-      transactions = [
-        Transaction(
-          amount: 5.0,
-          description: 'description',
-          type: TransactionType.expense,
-          createdAt: DateTime.now(),
-        ),
-        Transaction(
-          amount: 5.0,
-          description: 'description',
-          type: TransactionType.income,
-          createdAt: DateTime.now(),
-        ),
-        Transaction(
-          amount: 5.0,
-          description: 'description',
-          type: TransactionType.expense,
-          createdAt: DateTime.now(),
-        ),
-      ];
-    });
+    final result = await ref.read(transactionsProvider.notifier).getAll();
+
+    if (result.type == ResponseType.error) {
+      showCustomDialog(
+        context,
+        title: 'Error',
+        content: 'Couldn\'t fetch your records. Please try again later',
+      );
+      return;
+    }
+
+    setState(() => transactions = ref.read(transactionsProvider).transactions);
   }
 
   @override
@@ -106,38 +98,74 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(top: 32),
-                  shrinkWrap: true,
-                  itemCount: transactions.length,
-                  itemBuilder: (context, index) {
-                    return TransactionCard(
-                      margin: const EdgeInsets.only(bottom: 22),
-                      transaction: transactions[index],
-                      onTap: (trs) {},
-                    );
-                  },
-                ),
+                child: (ref.watch(transactionsProvider).isLoading)
+                    ? const _Loader()
+                    : (transactions.isNotEmpty)
+                        ? ListView.builder(
+                            padding: const EdgeInsets.only(top: 32),
+                            shrinkWrap: true,
+                            itemCount: transactions.length,
+                            itemBuilder: (context, index) {
+                              return TransactionCard(
+                                margin: const EdgeInsets.only(bottom: 22),
+                                transaction: transactions[index],
+                                onTap: (trs) {},
+                              );
+                            },
+                          )
+                        : const _EmptyList(),
               ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateTransactionPage(),
+              ),
+            ).then((val) async => await _getTransactions());
+          },
         ),
       ),
     );
   }
 }
 
-class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+class _Loader extends StatelessWidget {
+  const _Loader();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class _EmptyList extends StatelessWidget {
+  const _EmptyList();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
       children: [
-        Text(
-          'My transactions',
-          style: Theme.of(context).textTheme.titleLarge,
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Center(
+            child: Text(
+              'No transactions',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.inverseSurface,
+                  ),
+            ),
+          ),
         ),
       ],
     );
