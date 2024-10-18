@@ -39,7 +39,7 @@ class TransactionsDatasourceImpl implements TransactionsDatasource {
         whereArgs: [id],
       );
 
-      return SuccessResponse(message: 'Deleted successfully');
+      return SuccessResponse(message: 'Deleted successfully!');
     } catch (e) {
       return ErrorResponse(message: e.toString());
     }
@@ -72,8 +72,22 @@ class TransactionsDatasourceImpl implements TransactionsDatasource {
   }
 
   @override
-  Future<ApiResponse> update(Transaction transaction) {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<ApiResponse> update(Transaction transaction) async {
+    try {
+      final db = await database;
+
+      final newData = TransactionMapper.entityToMap(transaction);
+
+      await db.update(
+        Environment.transactionsName,
+        newData,
+        where: 'id = ?',
+        whereArgs: [transaction.id],
+      );
+
+      return SuccessResponse(message: 'Updated successfully!');
+    } catch (e) {
+      return ErrorResponse(message: e.toString());
+    }
   }
 }

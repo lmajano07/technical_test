@@ -2,6 +2,8 @@ enum TransactionType {
   expense,
   income;
 
+  bool isExpense() => this == expense;
+
   @override
   String toString() {
     switch (this) {

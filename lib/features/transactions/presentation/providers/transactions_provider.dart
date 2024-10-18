@@ -51,6 +51,16 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
     );
   }
 
+  Future<ApiResponse> update(Transaction transaction) async {
+    _toggleLoading();
+
+    final result = await repository.update(transaction);
+
+    _toggleLoading();
+
+    return result;
+  }
+
   Future<ApiResponse> delete(int id) async {
     _toggleLoading();
 

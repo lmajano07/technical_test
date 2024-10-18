@@ -8,7 +8,6 @@ import 'package:transactions_app/features/transactions/presentation/presentation
 
 import 'package:transactions_app/features/shared/shared.dart';
 
-import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ManageTransactionPage extends ConsumerStatefulWidget {
@@ -33,11 +32,10 @@ class _ManageTransactionPageState extends ConsumerState<ManageTransactionPage> {
   void initState() {
     super.initState();
 
-    final format = NumberFormat('#,##0.00');
-
     descriptionController.text = widget.transaction.description;
-    amountController.text = format.format(widget.transaction.amount);
+    amountController.text = widget.transaction.amount.toString();
     selectedDate = widget.transaction.createdAt;
+    isIncome = !widget.transaction.type.isExpense();
   }
 
   _showBottomSheet() {
@@ -77,6 +75,28 @@ class _ManageTransactionPageState extends ConsumerState<ManageTransactionPage> {
     );
   }
 
+  _editTransaction() async {
+    final newTransaction = widget.transaction.copyWith(
+      amount: double.parse(amountController.text),
+      description: descriptionController.text,
+      type: !isIncome ? TransactionType.expense : TransactionType.income,
+      createdAt: selectedDate!,
+    );
+
+    final result =
+        await ref.read(transactionsProvider.notifier).update(newTransaction);
+
+    showCustomDialog(
+      context,
+      title: result.type.toString(),
+      content: result.message,
+      onOkPressed: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+    );
+  }
+
   _deleteTransaction() async {
     final bool confirmAction = await showCustomDialog<bool>(
           context,
@@ -99,7 +119,7 @@ class _ManageTransactionPageState extends ConsumerState<ManageTransactionPage> {
 
     showCustomDialog(
       context,
-      title: (didDelete) ? 'Success' : 'Error',
+      title: result.type.toString(),
       content: result.message,
       onOkPressed: () {
         if (didDelete) Navigator.pop(context);
@@ -191,7 +211,7 @@ class _ManageTransactionPageState extends ConsumerState<ManageTransactionPage> {
                   onTap: () async {
                     if (!_formKey.currentState!.validate()) return;
 
-                    // await _createRecord();
+                    await _editTransaction();
                   },
                 ),
               const BottomSpacing(),
