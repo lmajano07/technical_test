@@ -70,6 +70,15 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
+  _navigateToManage(Transaction transaction) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ManageTransactionPage(transaction: transaction),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final transactions = filteredTransactions();
@@ -109,7 +118,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               return TransactionCard(
                                 margin: const EdgeInsets.only(bottom: 22),
                                 transaction: transactions[index],
-                                onTap: (trs) {},
+                                onTap: _navigateToManage,
                               );
                             },
                           )

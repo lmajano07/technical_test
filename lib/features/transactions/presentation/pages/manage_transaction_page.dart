@@ -8,59 +8,85 @@ import 'package:transactions_app/features/transactions/presentation/presentation
 
 import 'package:transactions_app/features/shared/shared.dart';
 
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreateTransactionPage extends ConsumerStatefulWidget {
-  const CreateTransactionPage({super.key});
+class ManageTransactionPage extends ConsumerStatefulWidget {
+  const ManageTransactionPage({super.key, required this.transaction});
+
+  final Transaction transaction;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CreateTransactionPageState();
+      _ManageTransactionPageState();
 }
 
-class _CreateTransactionPageState extends ConsumerState<CreateTransactionPage> {
+class _ManageTransactionPageState extends ConsumerState<ManageTransactionPage> {
   final _formKey = GlobalKey<FormState>();
   final descriptionController = TextEditingController();
   final amountController = TextEditingController();
   DateTime? selectedDate;
   bool isIncome = false;
+  bool _isEditing = false;
 
-  _createRecord() async {
-    final Transaction transaction = Transaction.create(
-      amount: double.parse(amountController.text),
-      description: descriptionController.text.trim(),
-      type: !isIncome ? TransactionType.expense : TransactionType.income,
-      createdAt: selectedDate!,
+  @override
+  void initState() {
+    super.initState();
+
+    final format = NumberFormat('#,##0.00');
+
+    descriptionController.text = widget.transaction.description;
+    amountController.text = format.format(widget.transaction.amount);
+    selectedDate = widget.transaction.createdAt;
+  }
+
+  _showBottomSheet() {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    showCustomBottomSheet(
+      context,
+      height: MediaQuery.of(context).size.height * 0.25,
+      child: Column(
+        children: [
+          ListTile(
+            onTap: () {
+              setState(() => _isEditing = !_isEditing);
+              Navigator.pop(context);
+            },
+            title: const Text('Edit'),
+            leading: const Icon(Icons.edit),
+          ),
+          const Divider(),
+          ListTile(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            title: const Text('Delete'),
+            titleTextStyle: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(color: colorScheme.error),
+            leading: Icon(
+              Icons.delete,
+              color: colorScheme.error,
+            ),
+          ),
+        ],
+      ),
     );
-
-    final notifier = ref.read(transactionsProvider.notifier);
-
-    final result = await notifier.create(transaction);
-
-    if (result.type == ResponseType.error) {
-      showCustomDialog(
-        context,
-        title: 'Error!',
-        content: 'Couldn\'t create this transaction. Please try again later',
-      );
-    } else {
-      showCustomDialog(
-        context,
-        title: 'Success!',
-        content: 'Transacion created succesfully',
-        onOkPressed: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        },
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add transaction'),
+        title: const Text('Transaction'),
+        actions: [
+          IconButton(
+            onPressed: _showBottomSheet,
+            icon: const Icon(Icons.more_vert),
+          )
+        ],
       ),
       body: Padding(
         padding: screenPadding,
@@ -69,6 +95,7 @@ class _CreateTransactionPageState extends ConsumerState<CreateTransactionPage> {
           child: Column(
             children: [
               CustomTextField(
+                isEnabled: _isEditing,
                 controller: descriptionController,
                 label: 'Description',
                 hint: 'Add a brief description',
@@ -82,6 +109,7 @@ class _CreateTransactionPageState extends ConsumerState<CreateTransactionPage> {
               ),
               const SizedBox(height: 24),
               CustomTextField(
+                isEnabled: _isEditing,
                 controller: amountController,
                 label: 'Amount',
                 hint: 'Enter the amount',
@@ -102,6 +130,7 @@ class _CreateTransactionPageState extends ConsumerState<CreateTransactionPage> {
               ),
               const SizedBox(height: 24),
               DatePicker(
+                isEnabled: _isEditing,
                 initialDate: selectedDate,
                 onDateChanged: (date) {
                   setState(() => selectedDate = date);
@@ -116,66 +145,28 @@ class _CreateTransactionPageState extends ConsumerState<CreateTransactionPage> {
               ),
               const SizedBox(height: 24),
               TransactionTypeSwitch(
+                isEnabled: _isEditing,
                 value: isIncome,
                 onChanged: (value) {
                   setState(() => isIncome = value);
                 },
               ),
               const Spacer(),
-              CustomButton(
-                text: 'Save',
-                isLoading: ref.watch(transactionsProvider).isLoading,
-                onTap: () async {
-                  if (!_formKey.currentState!.validate()) return;
+              if (_isEditing)
+                CustomButton(
+                  text: 'Save',
+                  isLoading: ref.watch(transactionsProvider).isLoading,
+                  onTap: () async {
+                    if (!_formKey.currentState!.validate()) return;
 
-                  await _createRecord();
-                },
-              ),
+                    // await _createRecord();
+                  },
+                ),
               const BottomSpacing(),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class TransactionTypeSwitch extends StatelessWidget {
-  const TransactionTypeSwitch({
-    super.key,
-    required this.value,
-    required this.onChanged,
-    this.isEnabled = true,
-  });
-
-  final bool value, isEnabled;
-  final void Function(bool) onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
-          color: (isEnabled) ? null : Theme.of(context).disabledColor,
-        );
-
-    return Row(
-      children: [
-        Text(
-          'Expense',
-          style: textStyle,
-        ),
-        const SizedBox(width: 8),
-        Switch.adaptive(
-          value: value,
-          onChanged: (val) {
-            if (isEnabled) onChanged(val);
-          },
-        ),
-        const SizedBox(width: 8),
-        Text(
-          'Income',
-          style: textStyle,
-        ),
-      ],
     );
   }
 }

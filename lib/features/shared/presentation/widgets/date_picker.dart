@@ -7,11 +7,13 @@ class DatePicker extends StatefulWidget {
     this.initialDate,
     this.validator,
     required this.onDateChanged,
+    this.isEnabled = true,
   });
 
   final DateTime? initialDate;
   final String? Function(String?)? validator;
   final void Function(DateTime) onDateChanged;
+  final bool isEnabled;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -24,7 +26,9 @@ class _DatePickerState extends State<DatePicker> {
   void initState() {
     super.initState();
 
-    if (widget.initialDate != null) {}
+    if (widget.initialDate != null) {
+      setDateText(widget.initialDate!);
+    }
   }
 
   setDateText(DateTime date) => controller.text = date.format();
@@ -51,19 +55,23 @@ class _DatePickerState extends State<DatePicker> {
     }
 
     return GestureDetector(
-      onTap: selectDate,
+      onTap: () {
+        if (widget.isEnabled) selectDate();
+      },
       child: TextFormField(
         controller: controller,
         validator: widget.validator,
         enabled: false,
-        style: Theme.of(context).textTheme.bodyLarge,
+        style:
+            (widget.isEnabled) ? Theme.of(context).textTheme.bodyLarge : null,
         decoration: InputDecoration(
           labelText: 'Date',
-          labelStyle: Theme.of(context).textTheme.bodyLarge,
+          labelStyle:
+              (widget.isEnabled) ? Theme.of(context).textTheme.bodyLarge : null,
           hintText: 'Select a date',
           border: border,
           focusedBorder: border,
-          disabledBorder: border,
+          disabledBorder: (widget.isEnabled) ? border : null,
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           ),
