@@ -21,12 +21,15 @@ These are the features the user will have access to inside the app:
 - Implemented clean architecture principles
 - State managed with `Riverpod`
 - Local storage managed with `SQLite`
+  - This is because SQLite offers more secure and stable storage than SharedPreferences. SharedPreferences should be used only for non-valuable data such as preferences or tokens
 - Contains dark mode
 - Created using Flutter v3.24.3
 
 ## How to run the project
 
 1. Clone the repository to your local machine
+
+   - Clone `main` branch
 
 2. Add `.env` file with variables
 
