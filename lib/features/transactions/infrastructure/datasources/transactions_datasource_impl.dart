@@ -29,7 +29,7 @@ class TransactionsDatasourceImpl implements TransactionsDatasource {
   }
 
   @override
-  Future<ApiResponse> delete(Transaction transaction) {
+  Future<ApiResponse> delete(int id) {
     // TODO: implement delete
     throw UnimplementedError();
   }
