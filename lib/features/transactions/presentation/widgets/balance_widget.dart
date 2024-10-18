@@ -9,6 +9,7 @@ class BalanceWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final balance = ref.watch(transactionsProvider).balance;
 
     return Container(
       width: double.infinity,
@@ -32,9 +33,10 @@ class BalanceWidget extends ConsumerWidget {
                 Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 18),
           ),
           const SizedBox(height: 12),
-          const _SummaryItem(
-            isIncome: true,
-            amount: 1000.99,
+          _SummaryItem(
+            isIncome: balance!.balance > 0.0,
+            isNeutral: balance.balance == 0.0,
+            amount: balance.balance,
             showLabel: false,
           ),
           const SizedBox(height: 24),
@@ -44,20 +46,22 @@ class BalanceWidget extends ConsumerWidget {
                 Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 18),
           ),
           const SizedBox(height: 12),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(
                 child: _SummaryItem(
                   isIncome: true,
-                  amount: 1000.99,
+                  isNeutral: balance.income == 0.0,
+                  amount: balance.income,
                 ),
               ),
-              SizedBox(width: 24),
+              const SizedBox(width: 24),
               Expanded(
                 child: _SummaryItem(
                   isIncome: false,
-                  amount: 1111.99,
+                  isNeutral: balance.expense == 0.0,
+                  amount: balance.expense,
                 ),
               ),
             ],
@@ -73,9 +77,10 @@ class _SummaryItem extends StatelessWidget {
     required this.isIncome,
     required this.amount,
     this.showLabel = true,
+    this.isNeutral = false,
   });
 
-  final bool isIncome, showLabel;
+  final bool isIncome, isNeutral, showLabel;
   final double amount;
 
   @override
@@ -88,6 +93,7 @@ class _SummaryItem extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         AmountChip(
+          isNeutral: isNeutral,
           isExpense: !isIncome,
           amount: amount,
         ),

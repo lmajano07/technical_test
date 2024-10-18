@@ -8,9 +8,10 @@ class AmountChip extends StatelessWidget {
     required this.isExpense,
     required this.amount,
     this.width,
+    this.isNeutral = false,
   });
 
-  final bool isExpense;
+  final bool isExpense, isNeutral;
   final double amount;
   final double? width;
 
@@ -24,12 +25,18 @@ class AmountChip extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: isExpense ? Colors.red : Colors.green,
+        color: isNeutral
+            ? Theme.of(context).colorScheme.onSurfaceVariant
+            : isExpense
+                ? Colors.red
+                : Colors.green,
       ),
       child: Text(
-        '${isExpense ? '-' : '+'} \$${numberFormat.format(amount)}',
+        '${isNeutral ? '' : isExpense ? '-' : '+'} \$${numberFormat.format(amount)}',
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: Colors.white,
+              color: (isNeutral)
+                  ? Theme.of(context).colorScheme.onInverseSurface
+                  : Colors.white,
               fontWeight: FontWeight.bold,
             ),
       ),

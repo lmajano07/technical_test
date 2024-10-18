@@ -15,7 +15,10 @@ final transactionsProvider =
 class TransactionsNotifier extends StateNotifier<TransactionsState> {
   final TransactionsRepository repository;
 
-  TransactionsNotifier({required this.repository}) : super(TransactionsState());
+  TransactionsNotifier({required this.repository})
+      : super(TransactionsState()) {
+    _initBalance();
+  }
 
   Future<ApiResponse> create(Transaction transaction) async {
     _toggleLoading();
@@ -71,25 +74,33 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
     return result;
   }
 
+  void calculateBudget() {}
+
   void _toggleLoading() => state = state.copyWith(isLoading: !state.isLoading);
+
+  void _initBalance() => state = state.copyWith(balance: Balance.empty());
 }
 
 class TransactionsState {
-  final List<Transaction> transactions;
   final bool isLoading;
+  final List<Transaction> transactions;
+  final Balance? balance;
 
   TransactionsState({
-    this.transactions = const [],
     this.isLoading = false,
+    this.transactions = const [],
+    this.balance,
   });
 
   TransactionsState copyWith({
     List<Transaction>? transactions,
     bool? isLoading,
+    Balance? balance,
   }) {
     return TransactionsState(
       transactions: transactions ?? this.transactions,
       isLoading: isLoading ?? this.isLoading,
+      balance: balance ?? this.balance,
     );
   }
 }
