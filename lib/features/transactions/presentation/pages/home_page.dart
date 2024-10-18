@@ -76,7 +76,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       MaterialPageRoute(
         builder: (context) => ManageTransactionPage(transaction: transaction),
       ),
-    );
+    ).then((val) async => await _getTransactions());
   }
 
   @override

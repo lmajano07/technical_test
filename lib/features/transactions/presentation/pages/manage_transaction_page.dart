@@ -58,8 +58,9 @@ class _ManageTransactionPageState extends ConsumerState<ManageTransactionPage> {
           ),
           const Divider(),
           ListTile(
-            onTap: () {
+            onTap: () async {
               Navigator.pop(context);
+              await _deleteTransaction();
             },
             title: const Text('Delete'),
             titleTextStyle: Theme.of(context)
@@ -73,6 +74,37 @@ class _ManageTransactionPageState extends ConsumerState<ManageTransactionPage> {
           ),
         ],
       ),
+    );
+  }
+
+  _deleteTransaction() async {
+    final bool confirmAction = await showCustomDialog<bool>(
+          context,
+          title: 'Are you sure?',
+          content: 'This action can\'t be undone',
+          showCancel: true,
+          onCancelPressed: () => Navigator.pop(context, false),
+          okText: 'Delete',
+          onOkPressed: () => Navigator.pop(context, true),
+        ) ??
+        false;
+
+    if (!confirmAction) return;
+
+    final result = await ref
+        .read(transactionsProvider.notifier)
+        .delete(widget.transaction.id);
+
+    final didDelete = result.type == ResponseType.success;
+
+    showCustomDialog(
+      context,
+      title: (didDelete) ? 'Success' : 'Error',
+      content: result.message,
+      onOkPressed: () {
+        if (didDelete) Navigator.pop(context);
+        Navigator.pop(context);
+      },
     );
   }
 

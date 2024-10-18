@@ -4,7 +4,11 @@ Future<T?> showCustomDialog<T>(
   BuildContext context, {
   String? title,
   required String content,
+  String okText = 'Ok',
   void Function()? onOkPressed,
+  bool showCancel = false,
+  String cancelText = 'Cancel',
+  void Function()? onCancelPressed,
 }) {
   return showDialog(
     context: context,
@@ -18,6 +22,18 @@ Future<T?> showCustomDialog<T>(
         content: Text(content),
         contentTextStyle: Theme.of(context).textTheme.bodyMedium!,
         actions: [
+          if (showCancel)
+            TextButton(
+              onPressed: () {
+                if (onCancelPressed == null) {
+                  Navigator.pop(context);
+                  return;
+                }
+
+                onCancelPressed();
+              },
+              child: Text(cancelText),
+            ),
           TextButton(
             onPressed: () {
               if (onOkPressed == null) {
@@ -27,7 +43,7 @@ Future<T?> showCustomDialog<T>(
 
               onOkPressed();
             },
-            child: const Text('Ok'),
+            child: Text(okText),
           ),
         ],
       );
