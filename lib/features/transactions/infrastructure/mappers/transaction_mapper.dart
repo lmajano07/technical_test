@@ -10,8 +10,6 @@ class TransactionMapper {
     final isInt = map['amount'].runtimeType == int;
     amount = (isInt) ? map['amount'].toDouble() : amount = map['amount'];
 
-    print(map['type']);
-
     return Transaction(
       id: map['id'],
       amount: amount,
