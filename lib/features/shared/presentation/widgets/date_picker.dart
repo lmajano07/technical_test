@@ -31,6 +31,10 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+    );
+
     selectDate() async {
       final newDate = await showDatePicker(
         context: context,
@@ -57,8 +61,9 @@ class _DatePickerState extends State<DatePicker> {
           labelText: 'Date',
           labelStyle: Theme.of(context).textTheme.bodyLarge,
           hintText: 'Select a date',
-          border: const OutlineInputBorder(),
-          disabledBorder: const OutlineInputBorder(),
+          border: border,
+          focusedBorder: border,
+          disabledBorder: border,
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
           ),

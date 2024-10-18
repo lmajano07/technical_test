@@ -25,6 +25,10 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+    );
+
     return TextFormField(
       controller: widget.controller,
       validator: widget.validator,
@@ -34,7 +38,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,
-        border: const OutlineInputBorder(),
+        border: border,
+        focusedBorder: border,
+        enabledBorder: border,
       ),
     );
   }
