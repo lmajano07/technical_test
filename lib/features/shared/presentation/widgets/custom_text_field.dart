@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
     this.validator,
     this.textInputType,
     this.inputFormatters,
+    this.isEnabled = true,
   });
 
   final String label, hint;
@@ -17,6 +18,7 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextInputType? textInputType;
   final List<TextInputFormatter>? inputFormatters;
+  final bool isEnabled;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -35,6 +37,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       keyboardType: widget.textInputType,
       inputFormatters: widget.inputFormatters,
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      enabled: widget.isEnabled,
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,

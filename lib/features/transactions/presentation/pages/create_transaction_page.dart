@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 
 import 'package:transactions_app/core/core.dart';
 
-import 'package:transactions_app/features/shared/shared.dart';
 import 'package:transactions_app/features/transactions/domain/domain.dart';
 import 'package:transactions_app/features/transactions/presentation/presentation.dart';
+
+import 'package:transactions_app/features/shared/shared.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -144,28 +145,35 @@ class TransactionTypeSwitch extends StatelessWidget {
     super.key,
     required this.value,
     required this.onChanged,
+    this.isEnabled = true,
   });
 
-  final bool value;
+  final bool value, isEnabled;
   final void Function(bool) onChanged;
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
+          color: (isEnabled) ? null : Theme.of(context).disabledColor,
+        );
+
     return Row(
       children: [
         Text(
           'Expense',
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: textStyle,
         ),
         const SizedBox(width: 8),
         Switch.adaptive(
           value: value,
-          onChanged: onChanged,
+          onChanged: (val) {
+            if (isEnabled) onChanged(val);
+          },
         ),
         const SizedBox(width: 8),
         Text(
           'Income',
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: textStyle,
         ),
       ],
     );

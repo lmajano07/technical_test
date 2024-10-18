@@ -1,4 +1,5 @@
 import 'package:transactions_app/core/core.dart';
+import 'package:transactions_app/features/shared/shared.dart';
 
 import 'package:transactions_app/features/transactions/domain/domain.dart';
 import 'package:transactions_app/features/transactions/presentation/presentation.dart';
@@ -15,10 +16,13 @@ final transactionsProvider =
 class TransactionsNotifier extends StateNotifier<TransactionsState> {
   final TransactionsRepository repository;
 
-  TransactionsNotifier({required this.repository}) : super(TransactionsState());
+  TransactionsNotifier({required this.repository})
+      : super(TransactionsState()) {
+    _initBalance();
+  }
 
   Future<ApiResponse> create(Transaction transaction) async {
-    state = state.copyWith(isLoading: true);
+    _toggleLoading();
 
     if (state.transactions.isEmpty) {
       transaction = transaction.copyWith(id: 1);
@@ -28,46 +32,92 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
 
     final result = await repository.create(transaction);
 
-    state = state.copyWith(isLoading: false);
+    _toggleLoading();
 
     return result;
   }
 
   Future<ApiResponse> getAll() async {
-    state = state.copyWith(isLoading: true);
+    _toggleLoading();
 
     final result = await repository.getAll();
 
     return result.fold(
       (error) {
-        state = state.copyWith(isLoading: false);
+        _toggleLoading();
         return error;
       },
       (transactions) {
         state = state.copyWith(transactions: transactions, isLoading: false);
 
+        calculateBudget();
+
         return SuccessResponse();
       },
     );
   }
+
+  Future<ApiResponse> update(Transaction transaction) async {
+    _toggleLoading();
+
+    final result = await repository.update(transaction);
+
+    _toggleLoading();
+
+    return result;
+  }
+
+  Future<ApiResponse> delete(int id) async {
+    _toggleLoading();
+
+    final result = await repository.delete(id);
+
+    _toggleLoading();
+
+    return result;
+  }
+
+  void calculateBudget() {
+    double income = 0.0, expense = 0.0;
+
+    for (var transaction in state.transactions) {
+      if (transaction.type == TransactionType.expense) {
+        expense += transaction.amount;
+      } else {
+        income += transaction.amount;
+      }
+    }
+
+    state = state.copyWith(
+      balance: Balance(expense: expense, income: income),
+    );
+  }
+
+  void _toggleLoading() => state = state.copyWith(isLoading: !state.isLoading);
+
+  void _initBalance() => state = state.copyWith(balance: Balance.empty());
 }
 
 class TransactionsState {
-  final List<Transaction> transactions;
   final bool isLoading;
+  final List<Transaction> transactions;
+  final Balance? balance;
 
   TransactionsState({
-    this.transactions = const [],
     this.isLoading = false,
+    this.transactions = const [],
+    this.balance,
   });
 
   TransactionsState copyWith({
     List<Transaction>? transactions,
     bool? isLoading,
+    Balance? balance,
   }) {
     return TransactionsState(
       transactions: transactions ?? this.transactions,
       isLoading: isLoading ?? this.isLoading,
+      balance: balance ?? this.balance,
     );
   }
 }

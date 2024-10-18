@@ -70,6 +70,15 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
+  _navigateToManage(Transaction transaction) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ManageTransactionPage(transaction: transaction),
+      ),
+    ).then((val) async => await _getTransactions());
+  }
+
   @override
   Widget build(BuildContext context) {
     final transactions = filteredTransactions();
@@ -97,6 +106,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
             children: [
+              const SizedBox(height: verticalPadding),
+              const BalanceWidget(),
               Expanded(
                 child: (ref.watch(transactionsProvider).isLoading)
                     ? const _Loader()
@@ -109,7 +120,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               return TransactionCard(
                                 margin: const EdgeInsets.only(bottom: 22),
                                 transaction: transactions[index],
-                                onTap: (trs) {},
+                                onTap: _navigateToManage,
                               );
                             },
                           )
@@ -157,7 +168,7 @@ class _EmptyList extends StatelessWidget {
     return ListView(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: Center(
             child: Text(
               'No transactions',

@@ -13,13 +13,8 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
   }
 
   @override
-  Future<ApiResponse> delete(Transaction transaction) {
-    return datasource.delete(transaction);
-  }
-
-  @override
-  Future<ApiResponse> deleteAll() {
-    return datasource.deleteAll();
+  Future<ApiResponse> delete(int id) {
+    return datasource.delete(id);
   }
 
   @override

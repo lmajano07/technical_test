@@ -1,4 +1,19 @@
-enum ResponseType { success, error }
+enum ResponseType {
+  success,
+  error;
+
+  @override
+  String toString() {
+    switch (this) {
+      case success:
+        return 'Success';
+      case error:
+        return 'Error';
+      default:
+        return 'Success';
+    }
+  }
+}
 
 abstract class ApiResponse {
   final ResponseType type;
