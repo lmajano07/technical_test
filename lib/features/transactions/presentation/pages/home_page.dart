@@ -168,7 +168,7 @@ class _EmptyList extends StatelessWidget {
     return ListView(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: Center(
             child: Text(
               'No transactions',

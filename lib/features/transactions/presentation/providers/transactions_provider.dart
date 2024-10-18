@@ -1,4 +1,5 @@
 import 'package:transactions_app/core/core.dart';
+import 'package:transactions_app/features/shared/shared.dart';
 
 import 'package:transactions_app/features/transactions/domain/domain.dart';
 import 'package:transactions_app/features/transactions/presentation/presentation.dart';
@@ -49,6 +50,8 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
       (transactions) {
         state = state.copyWith(transactions: transactions, isLoading: false);
 
+        calculateBudget();
+
         return SuccessResponse();
       },
     );
@@ -74,7 +77,21 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
     return result;
   }
 
-  void calculateBudget() {}
+  void calculateBudget() {
+    double income = 0.0, expense = 0.0;
+
+    for (var transaction in state.transactions) {
+      if (transaction.type == TransactionType.expense) {
+        expense += transaction.amount;
+      } else {
+        income += transaction.amount;
+      }
+    }
+
+    state = state.copyWith(
+      balance: Balance(expense: expense, income: income),
+    );
+  }
 
   void _toggleLoading() => state = state.copyWith(isLoading: !state.isLoading);
 

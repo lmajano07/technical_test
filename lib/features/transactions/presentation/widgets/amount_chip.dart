@@ -19,6 +19,16 @@ class AmountChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final numberFormat = NumberFormat('#,##0.00');
 
+    String amountText() {
+      String text = '';
+
+      if (!isNeutral) text += isExpense ? '-' : '+';
+
+      text += ' \$${numberFormat.format(amount.abs())}';
+
+      return text;
+    }
+
     return Container(
       width: width,
       alignment: Alignment.center,
@@ -32,7 +42,7 @@ class AmountChip extends StatelessWidget {
                 : Colors.green,
       ),
       child: Text(
-        '${isNeutral ? '' : isExpense ? '-' : '+'} \$${numberFormat.format(amount)}',
+        amountText(),
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               color: (isNeutral)
                   ? Theme.of(context).colorScheme.onInverseSurface
