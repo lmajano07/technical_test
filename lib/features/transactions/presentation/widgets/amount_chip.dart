@@ -29,7 +29,8 @@ class AmountChip extends StatelessWidget {
       return text;
     }
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
       width: width,
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8),
