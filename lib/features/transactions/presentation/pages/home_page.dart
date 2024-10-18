@@ -97,26 +97,24 @@ class _HomePageState extends ConsumerState<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
             children: [
-              (ref.watch(transactionsProvider).isLoading)
-                  ? const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.only(top: 32),
-                        shrinkWrap: true,
-                        itemCount: transactions.length,
-                        itemBuilder: (context, index) {
-                          return TransactionCard(
-                            margin: const EdgeInsets.only(bottom: 22),
-                            transaction: transactions[index],
-                            onTap: (trs) {},
-                          );
-                        },
-                      ),
-                    ),
+              Expanded(
+                child: (ref.watch(transactionsProvider).isLoading)
+                    ? const _Loader()
+                    : (transactions.isNotEmpty)
+                        ? ListView.builder(
+                            padding: const EdgeInsets.only(top: 32),
+                            shrinkWrap: true,
+                            itemCount: transactions.length,
+                            itemBuilder: (context, index) {
+                              return TransactionCard(
+                                margin: const EdgeInsets.only(bottom: 22),
+                                transaction: transactions[index],
+                                onTap: (trs) {},
+                              );
+                            },
+                          )
+                        : const _EmptyList(),
+              ),
             ],
           ),
         ),
@@ -136,6 +134,40 @@ class _HomePageState extends ConsumerState<HomePage> {
           },
         ),
       ),
+    );
+  }
+}
+
+class _Loader extends StatelessWidget {
+  const _Loader();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class _EmptyList extends StatelessWidget {
+  const _EmptyList();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Center(
+            child: Text(
+              'No transactions',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.inverseSurface,
+                  ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

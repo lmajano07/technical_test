@@ -22,13 +22,13 @@ class _CreateTransactionPageState extends ConsumerState<CreateTransactionPage> {
   final descriptionController = TextEditingController();
   final amountController = TextEditingController();
   DateTime? selectedDate;
-  bool isExpense = false;
+  bool isIncome = false;
 
   _createRecord() async {
     final Transaction transaction = Transaction.create(
       amount: double.parse(amountController.text),
       description: descriptionController.text.trim(),
-      type: isExpense ? TransactionType.expense : TransactionType.income,
+      type: !isIncome ? TransactionType.expense : TransactionType.income,
       createdAt: selectedDate!,
     );
 
@@ -115,9 +115,9 @@ class _CreateTransactionPageState extends ConsumerState<CreateTransactionPage> {
               ),
               const SizedBox(height: 24),
               TransactionTypeSwitch(
-                value: isExpense,
+                value: isIncome,
                 onChanged: (value) {
-                  setState(() => isExpense = value);
+                  setState(() => isIncome = value);
                 },
               ),
               const Spacer(),

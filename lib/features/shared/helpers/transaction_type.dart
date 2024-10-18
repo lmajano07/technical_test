@@ -5,9 +5,9 @@ enum TransactionType {
   @override
   String toString() {
     switch (this) {
-      case == expense:
+      case expense:
         return 'expense';
-      case == income:
+      case income:
         return 'income';
       default:
         return 'expense';

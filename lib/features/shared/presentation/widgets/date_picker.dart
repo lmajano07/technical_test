@@ -59,6 +59,9 @@ class _DatePickerState extends State<DatePicker> {
           hintText: 'Select a date',
           border: const OutlineInputBorder(),
           disabledBorder: const OutlineInputBorder(),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
+          ),
         ),
       ),
     );
