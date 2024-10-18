@@ -1,10 +1,10 @@
-import 'package:dartz/dartz.dart';
 import 'package:transactions_app/core/core.dart';
 
 import 'package:transactions_app/features/transactions/domain/domain.dart';
-
-import 'package:sqflite/sqflite.dart' as sqlite;
 import 'package:transactions_app/features/transactions/infrastructure/infrastructure.dart';
+
+import 'package:dartz/dartz.dart';
+import 'package:sqflite/sqflite.dart' as sqlite;
 
 class TransactionsDatasourceImpl implements TransactionsDatasource {
   final Future<sqlite.Database> database;
@@ -29,9 +29,20 @@ class TransactionsDatasourceImpl implements TransactionsDatasource {
   }
 
   @override
-  Future<ApiResponse> delete(int id) {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future<ApiResponse> delete(int id) async {
+    try {
+      final db = await database;
+
+      await db.delete(
+        Environment.transactionsName,
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+
+      return SuccessResponse(message: 'Deleted successfully');
+    } catch (e) {
+      return ErrorResponse(message: e.toString());
+    }
   }
 
   @override

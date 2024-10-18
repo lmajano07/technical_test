@@ -50,6 +50,10 @@ class TransactionsNotifier extends StateNotifier<TransactionsState> {
       },
     );
   }
+
+  Future<ApiResponse> delete(int id) async {
+    return await repository.delete(id);
+  }
 }
 
 class TransactionsState {
